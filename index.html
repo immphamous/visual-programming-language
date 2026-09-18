@@ -116,7 +116,46 @@
     <i class="bi bi-plus"></i>
 </div>
 
+<div id="item-context-menu">
+    <ul>
+        <li>Duplicate</li>
+        <li>Remove</li>
+    </ul>
+</div>
+
 <style>
+    #item-context-menu {
+        position: absolute;
+        padding: 0.2em;
+        background-color: #00a8b8;
+        border: 2px solid #008591;
+        
+        border-radius: 0.4em;
+        color: white;
+        min-width: 8em;
+        
+        display: none;
+        
+        filter: drop-shadow(black);
+        
+        z-index: 999;
+    }
+    #item-context-menu ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+    #item-context-menu ul li {
+        padding: 0.3em;
+        cursor: pointer;
+        border-radius: 0.2em;
+    }
+    #item-context-menu ul li:hover {
+        background-color: rgba(255,255,255,0.35);
+    }
+    #item-context-menu ul li+li {
+        margin-top: 0em;
+    }
     
     body {
         font-family: "Roboto", sans-serif;
@@ -209,6 +248,7 @@
     }
     .item-text {
         flex-shrink: 0;
+        cursor: default;
     }
     
     #draggable-slots {
@@ -340,16 +380,52 @@
 </style>
 
 <script>
-    let target = null, draggingItem = null, draggingSlot = null;
+    let target = null, draggingItem = null, draggingSlot = null, itemContextMenuSelected = null;
     
     
-    
+    document.onclick = () => {
+        $('#item-context-menu').hide(200);
+    }
+    document.oncontextmenu = (e) => {
+        console.log("yo");
+        if(!$('#item-context-menu').is(':hidden'))
+            $('#item-context-menu').hide(200);
+    }
+
     function isBefore(el1, el2) {
         if (el2.parentNode === el1.parentNode)
         for (var cur = el1.previousSibling; cur && cur.nodeType !== 9; cur = cur.previousSibling)
           if (cur === el2)
             return true;
         return false;
+    }
+    
+    $('#item-context-menu').find('li').each((index, li) => {
+        $(li).on('click', (e) => {
+            if(!itemContextMenuSelected) return;
+            
+            if($(li).text() == "Remove") {
+                itemContextMenuSelected.remove();
+            } else if($(li).text() == "Duplicate") {
+                var newItem = itemContextMenuSelected.clone();
+                initItem(newItem);
+                newItem.insertAfter(itemContextMenuSelected)
+                
+                newItem.find('.draggable-slot').each((index, slot) => {
+                    initSlotInstance($(slot), $(slot).find('button:last'));
+                });
+            }
+            
+            
+            
+            console.log(itemContextMenuSelected);
+        })
+    })
+    
+    function initSlotInstance(newSlot, xButton) {
+        xButton.on("click", (e) => {
+            newSlot.remove();
+        })
     }
     
     function initSlot(slot) {
@@ -360,9 +436,7 @@
             
             var xButton = $('<button>').appendTo(newSlot);
             var i = $('<i>').addClass("bi bi-x").appendTo(xButton);
-            xButton.on("click", (e) => {
-                newSlot.remove();
-            })
+            initSlotInstance(newSlot, xButton);
             
             draggingSlot = newSlot;
         })
@@ -378,7 +452,6 @@
                 
             } else {
                 draggingSlot.remove();
-                console.log("bye !")
             }
             
             
@@ -393,14 +466,11 @@
     
     function initList(list) {
         $(list).on('dragover', (e) => {
-            console.log("HI");
             
             if(!draggingItem) return;
             if($(list).children().length > 0) {
-                console.log(list.children.length)
                 return;
             }
-            console.log(e.target.classList);
             e.target.appendChild(draggingItem);
             e.preventDefault();
         })
@@ -417,14 +487,11 @@
         if(name != "begin") {
             var xButton = $('<button>').appendTo(header);
             
+            $('.draggable-slot')
+            
             var i = $('<i>').addClass("bi bi-x").appendTo(xButton);
             xButton.on("click", (e) => {
                 list.remove();
-            
-                $(`.draggable-slot`).filter('.catagory-label').each((index, value) => {
-                    if($(value).text() == name) $(value).remove();
-                });
-                
             })
             
         }
@@ -492,7 +559,6 @@
         })
         $(item).find('.slot').each((index, slot) => {
             $(slot).on('dragenter', (e) => {
-                console.log("YAY")
                 if(!draggingSlot) return;
                 /*$(input).addClass('hidden');*/
                 $(slot).addClass('dragging-over');
@@ -513,6 +579,21 @@
                 $(slot).removeClass('dragging-over');
                 // draggingSlot.insertAfter(input);
             })
+        })
+        $(item).on('contextmenu', (e) => {
+            e.preventDefault();
+            
+            e.stopPropagation();
+    
+            if (!$('#item-context-menu').is(":hidden"))
+                $('#item-context-menu').hide(100)
+            else {
+                $('#item-context-menu').show(50)
+                $('#item-context-menu').css('left', e.pageX + "px");
+                $('#item-context-menu').css('top', e.pageY + "px");
+                
+                itemContextMenuSelected = $(item)
+            }
         })
     }
     
