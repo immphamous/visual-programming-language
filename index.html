@@ -416,10 +416,17 @@
         var header = $('<div>', { "draggable": true }).addClass('draggable-slot catagory-label').text(name).appendTo(list);
         if(name != "begin") {
             var xButton = $('<button>').appendTo(header);
+            
             var i = $('<i>').addClass("bi bi-x").appendTo(xButton);
             xButton.on("click", (e) => {
                 list.remove();
+            
+                $(`.draggable-slot`).filter('.catagory-label').each((index, value) => {
+                    if($(value).text() == name) $(value).remove();
+                });
+                
             })
+            
         }
         
         initSlot(header);
