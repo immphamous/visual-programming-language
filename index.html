@@ -1,0 +1,659 @@
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script src="jquery.js"></script>
+
+<div id="draggable-slots">
+    <div class="draggable-slot" draggable="true">
+        my slot
+    </div>
+    <div class="draggable-slot" draggable="true">
+        my slot 2
+    </div>
+    <div class="new-option catagory-slot">
+        <i class="bi bi-plus"></i>
+    </div>
+</div>
+
+<div id="labels">
+    <!--
+    <div class="label" id="main-block">
+        <p class="header">begin:</p>
+        <ul class="sortable-list">
+            <li class="sortable-item" draggable="true">
+                <div class="visual-item catagory-slot">
+                    <span class="drag-icon"><i class="bi bi-grip-vertical"></i>
+                    </span>
+                    
+                    <span class="item-text">
+                        set
+                    </span>
+                    
+                    <select>
+                        <option>my slot</option>
+                        <option>my slot 2</option>
+                    </select>
+                    
+                    <span class="item-text">
+                        to
+                    </span>
+                    
+                    <span class="slot">
+                        <input value="1">
+                    </span>
+                </div>
+            </li>
+            <li class="sortable-item" draggable="true">
+                <div class="visual-item catagory-move">
+                    <span class="drag-icon"><i class="bi bi-grip-vertical"></i></span>
+                    <span class="item-text">jump to</span>
+                    <span class="slot">
+                        <input value="it_was_true">
+                    </span>
+                    <span class="item-text">if</span>
+                    <span class="slot">
+                        <input value="2">
+                    </span>
+                    
+                    <select>
+                        <option value="equals">==</option>
+                        <option value="not_equals">!=</option>
+                        <option value="less">&lt;</option>
+                        <option value="greater">&gt;</option>
+                        <option value="less_than">&lt;=</option>
+                        <option value="greater_than">&gt;=</option>
+                    </select>
+                    
+                    <span class="slot">
+                        <input value="2">
+                    </span>
+                </div>
+            </li>
+            <li class="sortable-item" draggable="true">
+                <div class="visual-item">
+                    <span class="drag-icon"><i class="bi bi-grip-vertical"></i></span>
+                    <span class="item-text">
+                        print
+                    </span>
+                    <span class="slot">
+                        <input value="What happened?">
+                    </span>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="label">
+        <p class="header">it_was_true:</p>
+        <ul class="sortable-list">
+            <li class="sortable-item" draggable="true">
+                <div class="visual-item">
+                    <span class="drag-icon"><i class="bi bi-grip-vertical"></i></span>
+                    <span class="item-text">
+                        print
+                    </span>
+                    <span class="slot">
+                        <input value="I shall return!">
+                    </span>
+                </div>
+            </li>
+            <li class="sortable-item" draggable="true">
+                <div class="visual-item catagory-move">
+                    <span class="drag-icon"><i class="bi bi-grip-vertical"></i></span>
+                    <span class="item-text">
+                        return
+                    </span>
+                </div>
+            </li>
+        </ul>
+    </div>
+    -->
+</div>
+<div id="newList" class="new-option catagory-label">
+    <i class="bi bi-plus"></i>
+</div>
+
+<style>
+    
+    body {
+        font-family: "Roboto", sans-serif;
+    }
+    .header {
+        color: gray;
+        margin-bottom: 0;
+    }
+    .label {
+        margin-top: 2em;
+    }
+    .sortable-list {
+        
+        display: flex;
+        flex-direction: column;
+        gap: 0.2em;
+        
+        border-left: 2px solid lightgray;
+        padding-left: 1em;
+        padding:0.4em;
+        margin-top:0.2em;
+        margin-bottom:1.5em;
+        list-style-type: none;
+        
+        /* background-color:lightgrey; */
+        
+    }
+    .sortable-item {
+        /* padding: 0.25em; */
+    }
+    .visual-item {
+        background-color: #e6b815;
+        border: 2px solid #bd970f;
+        padding: 0.25em;
+        border-radius: 0.25em;
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        gap:0.25em;
+        flex-grow: 0;
+        box-sizing: border-box;
+        height: 38px;
+    }
+    .sortable-item input {
+        field-sizing: content;
+        min-width: 2.2em;
+        text-align: center;
+        outline: none;
+        background-color: white;
+        border: 2px solid #d6d6d6;
+        padding:0.2em;
+        padding-left:0.6em;
+        padding-right:0.6em;
+        
+        border-radius:1em;
+        
+        font-size: 14px;
+        font-family: 'Roboto';
+        
+        box-sizing: border-box;
+        height: 27px;
+    }
+    .sortable-item select {
+        field-sizing: content;
+        min-width: 2.2em;
+        text-align: center;
+        outline: none;
+        background-color: inherit;
+        border: inherit;
+        padding:0.2em;
+        padding-left:0.6em;
+        padding-right:0.6em;
+        
+        border-radius:0.4em;
+        
+        font-size: 14px;
+        font-family: 'Roboto';
+        
+        box-sizing: border-box;
+        height: 27px;
+        
+        color: white;
+    }
+    .drag-icon {
+        font-size: 1.2em;
+        cursor: grab;
+    }
+    .dragging {
+        opacity: 0.5;
+    }
+    .item-text {
+        flex-shrink: 0;
+    }
+    
+    #draggable-slots {
+        display: flex;
+        gap: 0.2em;
+        
+    }
+    #draggable-slots > .draggable-slot {
+        cursor: grab;
+    }
+    .label > .draggable-slot {
+        cursor: grab;
+    }
+    .draggable-slot {
+        background-color: #645de8;
+        border: 2px solid #403ab0;
+        color: white;
+        padding:0.2em;
+        padding-left:0.6em;
+        padding-right:0.6em;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3em;
+        
+        font-size: 14px;
+        
+        border-radius:1em;
+        
+        box-sizing: border-box;
+        height: 27px;
+        
+        flex-shrink: 0;
+        word-break: none;
+        position: relative;
+        z-index: 1;
+    }
+    .draggable-slot:has(button) {
+        padding-right:0.2em;
+    }
+    .draggable-slot button {
+        background-color: inherit;
+        border: none;
+        color: white;
+        
+        font-size: 1.4em;
+        
+        border-radius:1em;
+        
+        box-sizing: border-box;
+        height: 20px;
+        width: 20px;
+        
+        flex-shrink: 0;
+        
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+    .draggable-slot:has(button:hover) {
+        border: 2px dashed #403ab0;
+        opacity: 0.5;
+    }
+    .new-option {
+        background-color: darkgrey;
+        border: 2px solid grey;
+        color: white;
+        padding:0.2em;
+        padding-left:0.6em;
+        padding-right:0.6em;
+        
+        font-size: 14px;
+        
+        border-radius:1em;
+        
+        cursor: pointer;
+        
+        box-sizing: border-box;
+        height: 27px;
+        width: 27px;
+        
+        display: flex;
+        align-items: center;
+        justify-content:center;
+        font-size: 1.2em;
+        
+        transition: transform 0.2s;
+    }
+    .new-option:hover {
+        transform: rotate(180deg);
+    }
+    .slot {
+        pointer-events: none;
+    }
+    .slot input, .slot .draggable-slot {
+        pointer-events: auto;
+    }
+    .slot:has(.draggable-slot) input {
+        display: none;
+    }
+    .slot:has(.hidden) input {
+        display: block;
+    }
+    
+    .dragging-over input {
+        border: 2px solid #fff27a;
+    }
+    .dragging-over div {
+        border: 2px solid #fff27a;
+    }
+    
+    .catagory-move {
+        background-color: #69d1a4;
+        border: 2px solid #53ad86;
+    }
+    .catagory-slot {
+        background-color: #645de8;
+        border: 2px solid #403ab0;
+    }
+    .catagory-label {
+        background-color: #4a6e94;
+        border: 2px solid #3b5a7a;
+    }
+    .catagory-green {
+        background-color: #00ff00;
+        border: 2px solid #00dd00;
+    }
+</style>
+
+<script>
+    let target = null, draggingItem = null, draggingSlot = null;
+    
+    
+    
+    function isBefore(el1, el2) {
+        if (el2.parentNode === el1.parentNode)
+        for (var cur = el1.previousSibling; cur && cur.nodeType !== 9; cur = cur.previousSibling)
+          if (cur === el2)
+            return true;
+        return false;
+    }
+    
+    function initSlot(slot) {
+        $(slot).on('dragstart', (e) => {
+            
+            var newSlot = $('<div>').text($(slot).text());
+            newSlot.addClass($(slot).attr('class'))
+            
+            var xButton = $('<button>').appendTo(newSlot);
+            var i = $('<i>').addClass("bi bi-x").appendTo(xButton);
+            xButton.on("click", (e) => {
+                newSlot.remove();
+            })
+            
+            draggingSlot = newSlot;
+        })
+        $(slot).on('dragend', (e) => {
+            draggingSlot.removeClass('dragging');
+            
+            var chosenSlot = $('.dragging-over');
+            if(chosenSlot.length) {
+                chosenSlot.find('.draggable-slot').remove();
+                
+                $(chosenSlot).append(draggingSlot);
+                $(chosenSlot).removeClass('dragging-over');
+                
+            } else {
+                draggingSlot.remove();
+                console.log("bye !")
+            }
+            
+            
+            draggingSlot = null;
+        })
+    }
+    
+    var slots = $('.draggable-slot');
+    slots.each((index, slot) => {
+        initSlot(slot);
+    });
+    
+    function initList(list) {
+        $(list).on('dragover', (e) => {
+            console.log("HI");
+            
+            if(!draggingItem) return;
+            if($(list).children().length > 0) {
+                console.log(list.children.length)
+                return;
+            }
+            console.log(e.target.classList);
+            e.target.appendChild(draggingItem);
+            e.preventDefault();
+        })
+    }
+    
+    function newList(name) {
+        if(!name) {
+            name = prompt("What will be the name of the label?");
+            if(!name) return;
+        }
+        
+        var list = $('<div>').addClass('label').appendTo('#labels');
+        var header = $('<div>', { "draggable": true }).addClass('draggable-slot catagory-label').text(name).appendTo(list);
+        if(name != "begin") {
+            var xButton = $('<button>').appendTo(header);
+            var i = $('<i>').addClass("bi bi-x").appendTo(xButton);
+            xButton.on("click", (e) => {
+                list.remove();
+            })
+        }
+        
+        initSlot(header);
+        
+        var ul = $('<ul>').addClass('sortable-list').appendTo(list);
+        initList(ul);
+        
+        return ul;
+    }
+    
+    // newList("it_was_true");
+    
+    $('#newList').on('click', (e) => {
+        newList()
+    })
+    
+    var lists = $('.sortable-list');
+    lists.each((index, list) => {
+        initList(list)
+    });
+    
+    function initItem(item) {
+        // console.log(item);
+        var dragIcon = $(item).find('.drag-icon');
+        
+        $(item).on('mousedown', (e) => {
+            target = e.target;
+            // console.log(target);
+        })
+        $(item).on('dragstart', (e) => {
+            // console.log('start 2');
+            if($.contains(dragIcon.get(0), $(target).get(0))) {
+                // console.log('start 3');
+                draggingItem = e.target;
+                draggingItem.classList.add('dragging');
+            } else {
+                /*if($(target).hasClass('draggable-slot')) {
+                    /*$(target).trigger('dragstart');
+                    e.stopPropagation();
+                } else*/
+                e.preventDefault();
+            }
+        })
+        $(item).on('dragend', (e) => {
+            if(!draggingItem) return;
+            
+            draggingItem.classList.remove('dragging');
+            draggingItem = null;
+        })
+        $(item).on('dragover', (e) => {
+            if(!draggingItem) return;
+            
+            var target = e.target;
+            (e.target.classList.contains('visual-item'))
+                target = target.parentNode;
+            
+            if(!target.classList.contains('sortable-item')) return;
+            
+            if (isBefore(draggingItem, target))
+                target.parentNode.insertBefore(draggingItem, target);
+            else
+                target.parentNode.insertBefore(draggingItem, target.nextSibling);
+        })
+        $(item).find('.slot').each((index, slot) => {
+            $(slot).on('dragenter', (e) => {
+                console.log("YAY")
+                if(!draggingSlot) return;
+                /*$(input).addClass('hidden');*/
+                $(slot).addClass('dragging-over');
+                // slot.append(draggingSlot.get(0));
+            })
+            $(slot).on('dragover', (e) => {
+                e.preventDefault();
+            })
+            $(slot).on('dragleave', (e) => {
+                /*$(input).removeClass('hidden');*/
+                
+                if(e.target == slot) {
+                    console.log("HI")
+                    return;
+                }
+                
+                console.log(e.target);
+                $(slot).removeClass('dragging-over');
+                // draggingSlot.insertAfter(input);
+            })
+        })
+    }
+    
+    const itemPresets = {
+        "print": {
+            catagory: 'output',
+            sectors: [
+                {
+                    type: 'text',
+                    content: 'print'
+                },
+                {
+                    type: 'input',
+                    content: 'Hello, World!'
+                },
+            ]
+        },
+        "jump_if": {
+            catagory: 'move',
+            sectors: [
+                {
+                    type: 'text',
+                    content: 'jump to'
+                },
+                {
+                    type: 'input',
+                    content: '0'
+                },
+                {
+                    type: 'text',
+                    content: 'if'
+                },
+                {
+                    type: 'input',
+                    content: ''
+                },
+                {
+                    type: 'options',
+                    content: ['==', '!=', '<', '>', '<=', '>=']
+                },
+                {
+                    type: 'input',
+                    content: ''
+                },
+            ]
+        },
+        "jump_to": {
+            catagory: 'move',
+            sectors: [
+                {
+                    type: 'text',
+                    content: 'jump to'
+                },
+                {
+                    type: 'input',
+                    content: '0'
+                },
+            ]
+        },
+        "return": {
+            catagory: 'move',
+            sectors: [
+                {
+                    type: 'text',
+                    content: 'return'
+                },
+            ]
+        },
+        "set_slot": {
+            catagory: 'slot',
+            sectors: [
+                {
+                    type: 'text',
+                    content: 'set'
+                },
+                {
+                    type: 'options',
+                    content: ['my slot', 'my slot 2']
+                },
+                {
+                    type: 'text',
+                    content: 'to'
+                },
+                {
+                    type: 'input',
+                    content: '0'
+                },
+            ]
+        },
+        "change_slot": {
+            catagory: 'slot',
+            sectors: [
+                {
+                    type: 'text',
+                    content: 'change'
+                },
+                {
+                    type: 'options',
+                    content: ['my slot', 'my slot 2']
+                },
+                {
+                    type: 'text',
+                    content: 'by'
+                },
+                {
+                    type: 'input',
+                    content: '1'
+                },
+            ]
+        },
+    }
+    
+    function newItem(itemPreset, parent) {
+        var li = $('<li>', { "draggable": true }).addClass('sortable-item').appendTo(parent);
+        var div = $('<div>').addClass('visual-item').appendTo(li);
+        var handleSpan = $('<span>').addClass('drag-icon').appendTo(div);
+        var handle = $('<i>').addClass('bi bi-grip-vertical').appendTo(handleSpan);
+        div.addClass('catagory-' + itemPreset.catagory);
+        itemPreset.sectors.forEach(sector => {
+            if(sector.type == "text") {
+                $('<span>').addClass('item-text').text(sector.content).appendTo(div);
+            }
+            if(sector.type == "input") {
+                var slot = $('<slot>').addClass('slot').appendTo(div);
+                $('<input>').val(sector.content).appendTo(slot);
+            }
+            if(sector.type == "options") {
+                var select = $('<select>').appendTo(div);
+                sector.content.forEach(option => {
+                    $('<option>').text(option).appendTo(select);
+                })
+            }
+        })
+        
+        initItem(li);
+    }
+    
+    var items = $('.sortable-item');
+    items.each((index, item) => {
+        initItem(item);
+    });
+    
+    var begin = newList("begin");
+    newItem(itemPresets["print"], begin);
+    newItem(itemPresets["set_slot"], begin);
+    newItem(itemPresets["change_slot"], begin);
+    newItem(itemPresets["jump_to"], begin);
+    newItem(itemPresets["jump_if"], begin);
+    newItem(itemPresets["return"], begin);
+    
+</script>
