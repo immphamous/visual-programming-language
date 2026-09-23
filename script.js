@@ -42,6 +42,7 @@ $('#item-context-menu').find('li').each((index, li) => {
 })
 
 function initSlotInstance(newSlot, xButton) {
+    newSlot.attr('draggable', false);
     xButton.on("click", (e) => {
         newSlot.remove();
     })
@@ -66,6 +67,7 @@ function initSlot(slot) {
         draggingSlot = newSlot;
     })
     $(slot).on('dragend', (e) => {
+        if(!draggingSlot) return;
         draggingSlot.removeClass('dragging');
         
         var chosenSlot = $('.dragging-over');
@@ -90,7 +92,9 @@ slots.each((index, slot) => {
 });
 
 function initList(list) {
+    console.log("INIT")
     $(list).on('dragenter', (e) => {
+        e.stopPropagation();
         if(!draggingItem) return;
         if($(list).children().length > 0) {
             return;
@@ -102,6 +106,7 @@ function initList(list) {
         e.preventDefault();
     })
     $(list).on('dragleave', (e) => {
+        e.stopPropagation();
         if(!draggingItem) return;
         if($(list).children().length > 0) {
             return;
@@ -114,6 +119,9 @@ function initList(list) {
     })
     $(list).on('dragover', (e) => {
         e.preventDefault();  
+        e.stopPropagation();
+        
+        console.log($(list).hasClass('blocklist'));
     })
     $(list).on('drop', (e) => {
         e.preventDefault();  
@@ -123,13 +131,14 @@ function initList(list) {
             return;
         }
         
-        console.log('drop')
-        
-        
         if($(draggingItem).parent().attr('id') == 'blocks-list') {
             
-            $(draggingItem)
             var item = $(draggingItem).clone().removeClass('dragging');
+            
+            item.find('.sortable-list').each((index, ul) => {
+                initList(ul);
+                console.log(ul);
+            })
             $(list).append(item);
             
             initItem(item);
@@ -208,11 +217,9 @@ function initItemSlot(slot) {
         /*$(input).removeClass('hidden');*/
         
         if(e.target == slot) {
-            console.log("HI")
             return;
         }
         
-        console.log(e.target);
         $(slot).removeClass('dragging-over');
         // draggingSlot.insertAfter(input);
         e.stopPropagation();
@@ -220,26 +227,17 @@ function initItemSlot(slot) {
 }
 
 function initItem(item) {
-    // console.log(item);
     var dragIcon = $(item).find('.drag-icon');
     
     $(item).on('mousedown', (e) => {
         target = e.target;
-        // console.log(target);
     })
     $(item).on('dragstart', (e) => {
-        // console.log('start 2');
         console.log("start")
-        e.stopPropagation();
         if($.contains(dragIcon.get(0), $(target).get(0))) {
-            // console.log('start 3');
             draggingItem = e.target;
             draggingItem.classList.add('dragging');
         } else {
-            /*if($(target).hasClass('draggable-slot')) {
-                /*$(target).trigger('dragstart');
-                e.stopPropagation();
-            } else*/
             e.preventDefault();
         }
     })
@@ -255,18 +253,14 @@ function initItem(item) {
         if(!draggingItem) return;
         
         e.preventDefault();
-        e.stopPropagation();
         
         var target = e.currentTarget;
         var domRect = target.getBoundingClientRect();
         if(e.offsetY > domRect.height / 2) {
-           console.log("bottom"); 
-           
            $(item).removeClass('sortable-item-hover-top')
            
            $(item).addClass('sortable-item-hover-bottom');
         } else {
-            console.log("top");
            $(item).removeClass('sortable-item-hover-bottom');
            
            $(item).addClass('sortable-item-hover-top');
@@ -276,13 +270,13 @@ function initItem(item) {
         if(!draggingItem) return;
         
         e.preventDefault();
-        e.stopPropagation();
         
         var target = e.currentTarget;
         var domRect = target.getBoundingClientRect();
         if($(draggingItem).parent().attr('id') == 'blocks-list') {
             
             var newItem = $(draggingItem).clone().removeClass('dragging');
+            
             if(e.offsetY > domRect.height / 2) {
                // bottom
                
@@ -292,6 +286,10 @@ function initItem(item) {
                 item.before(newItem);
             }
             initItem(newItem);
+            newItem.find('.sortable-list').each((index, ul) => {
+                initList(ul);
+                console.log(ul)
+            })
         } else {
             if(e.offsetY > domRect.height / 2) {
                // bottom
@@ -334,15 +332,14 @@ function initItem(item) {
         }
     })
 }
-function newSlot(slotPreset) {
-    var div = $('<div>', { "draggable": true }).addClass('draggable-slot');
-    div.addClass('catagory-' + slotPreset.catagory);
-    slotPreset.sectors.forEach(sector => {
+
+function genFromPresets(preset, div) {
+    preset.sectors.forEach(sector => {
         if(sector.type == "text") {
             $('<span>').addClass('item-text').text(sector.content).appendTo(div);
         }
         if(sector.type == "input") {
-            var slot = $('<slot>').addClass('slot').appendTo(div);
+            var slot = $('<span>').addClass('slot').appendTo(div);
             $('<input>').val(sector.content).appendTo(slot);
         }
         if(sector.type == "options") {
@@ -351,8 +348,17 @@ function newSlot(slotPreset) {
                 $('<option>').text(option).appendTo(select);
             })
         }
+        if(sector.type == "blocklist") {
+            var ul = $('<ul>').addClass('sortable-list blocklist');
+            div.after(ul);
+        }
     })
-    
+}
+
+function newSlot(slotPreset) {
+    var div = $('<div>', { "draggable": true }).addClass('draggable-slot');
+    div.addClass('catagory-' + slotPreset.catagory);
+    genFromPresets(slotPreset, div);
     return div;
 }
 function newItem(itemPreset) {
@@ -361,26 +367,7 @@ function newItem(itemPreset) {
     var handleSpan = $('<span>').addClass('drag-icon').appendTo(div);
     var handle = $('<i>').addClass('bi bi-grip-vertical').appendTo(handleSpan);
     div.addClass('catagory-' + itemPreset.catagory);
-    itemPreset.sectors.forEach(sector => {
-        if(sector.type == "text") {
-            $('<span>').addClass('item-text').text(sector.content).appendTo(div);
-        }
-        if(sector.type == "input") {
-            var slot = $('<slot>').addClass('slot').appendTo(div);
-            $('<input>').val(sector.content).appendTo(slot);
-        }
-        if(sector.type == "options") {
-            var select = $('<select>').appendTo(div);
-            sector.content.forEach(option => {
-                $('<option>').text(option).appendTo(select);
-            })
-        }
-        /*if(sector.type == "labels") {
-            var select = $('<select>').appendTo(div);
-            
-            
-        }*/
-    })
+    genFromPresets(itemPreset, div);
     
     return li;
 }
@@ -432,7 +419,6 @@ function selectCatagory(catagoryButton, catagory, catagoryName) {
                 target = e.target;
             })
             item.on('dragstart', (e) => {
-                console.log("start")
                 e.stopPropagation();
                 if($.contains(dragIcon.get(0), $(target).get(0))) {
                     
@@ -446,8 +432,6 @@ function selectCatagory(catagoryButton, catagory, catagoryName) {
             })
             item.on('dragend', (e) => {
                 if(!draggingItem) return;
-                
-                console.log(e.target);
                 
                 $(draggingItem).removeClass('dragging');
                 
