@@ -186,6 +186,18 @@ const toolboxBlocks = {
             },
         ]
     },
+    "if": {
+        catagory: 'procedure',
+        sectors: [
+            {
+                type: 'text',
+                content: 'if'
+            },
+            {
+                type: 'blocklist'
+            },
+        ]
+    },
 }
 
 const toolboxSlots = {
@@ -254,6 +266,36 @@ const toolboxSlots = {
             {
                 type: 'input',
                 content: '0'
+            },
+        ]
+    },
+    
+    "sin": {
+        catagory: 'math',
+        sectors: [
+            {
+                type: 'options',
+                content: [
+                    'sin',
+                    'cos',
+                    'tan',
+                    'abs',
+                    
+                ]
+            },
+            {
+                type: 'input',
+                content: '0'
+            },
+        ]
+    },
+    
+    "clock": {
+        catagory: 'math',
+        sectors: [
+            {
+                type: 'text',
+                content: 'clock'
             },
         ]
     },
