@@ -1,0 +1,438 @@
+#holder {
+    
+}
+#toolbox {
+    position: fixed;
+    left:0;
+    width:400px;
+    top:0;
+    bottom:0;
+    
+    background-color:rgba(200,200,200,0.5);
+    z-index: 10;
+    transition: width 0.5s;
+
+    overflow-x: hidden;
+}
+#blocks-list {
+    position: absolute;
+    left:120px;
+    top:0;
+    bottom:0;
+    right:0;
+    padding:0.6em;
+    
+    transition: opacity 0.1s;
+    
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+}
+#toolbox-toggle {
+    border: 2px solid grey;
+    background-color: darkgrey;
+    
+    color: white;
+    
+    cursor: pointer;
+    
+    font-size: 1.5em;
+    width: 1.65em;
+    height: 1.65em;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    border-radius: 15%;
+    transform: scale(0.85);
+    transition: transform 0.1s, border-radius 0.5s;
+
+    z-index: 10;
+}
+#toolbox-toggle:hover {
+    transform: scale(0.9);
+}
+.toolbox-toggle-show {
+    border-radius: 50% !important;
+}
+
+.catagory-list {
+    transition: opacity 0.25s;
+    position: absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:120px;
+    padding-top:60px;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color:rgba(200,200,200,0.5);
+    gap: 0.2em;
+}
+.catagory-list .catagory {
+    display: inline-block;
+    
+    background-color: white;
+    font-family: 'Roboto';
+    border-radius: 2em;
+    padding:0.2em;
+    padding-left:0.8em;
+    padding-right:0.8em;
+    border: black 2px solid;
+    box-sizing: border-box;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    transition: color 0.2s, background-color 0.2s, transform 0.2s, margin 0.2s, border-radius 0.2s;
+}
+.catagory-list .selected-catagory {
+    color: white;
+    /*transform: scale(1.03);*/
+    margin-left: 0em;
+    margin-right: 0em;
+    border-radius: 0em;
+}
+#toolbox:has(.toolbox-toggle-show) .catagory-list {
+    opacity: 0;
+}
+#toolbox:has(.toolbox-toggle-show) #blocks-list {
+    opacity: 0;
+}
+
+#playground {
+    top:0;
+    position: fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    padding-left:410px;
+    padding-bottom:300px;
+    overflow:scroll;
+    transition: padding-left 0.5s;
+}
+
+#item-context-menu {
+    position: absolute;
+    padding: 0.2em;
+    background-color: #00a8b8;
+    border: 2px solid #008591;
+    
+    border-radius: 0.4em;
+    color: white;
+    min-width: 8em;
+    
+    display: none;
+    
+    filter: drop-shadow(black);
+    
+    z-index: 999;
+}
+#item-context-menu ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+#item-context-menu ul li {
+    padding: 0.3em;
+    cursor: pointer;
+    border-radius: 0.2em;
+}
+#item-context-menu ul li:hover {
+    background-color: rgba(255,255,255,0.35);
+}
+#item-context-menu ul li+li {
+    margin-top: 0em;
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+}
+.header {
+    color: gray;
+    margin-bottom: 0;
+}
+.label {
+    margin-top: 2em;
+}
+.sortable-list {
+    
+    display: flex;
+    flex-direction: column;
+    
+    border-left: 2px solid lightgray;
+    padding-left: 1em;
+    padding:0.4em;
+    margin-top:0.2em;
+    margin-bottom:1.5em;
+    list-style-type: none;
+    
+    /* background-color:lightgrey; */
+    
+}
+.sortable-list-hovered::before {
+    content: '';
+    height: 2px;
+    background-color:lightblue;
+    filter: drop-shadow(0 0 5px rgba(0, 0, 255, 0.5));
+    width:100%;
+    border-radius: 2px;
+}
+.sortable-item {
+    flex-grow: 0;
+    flex-shrink: 0;
+    position: relative;
+    padding-top: 0.15em;
+    padding-bottom: 0.15em;
+}
+.sortable-item + .sortable-item {
+    flex-grow: 0;
+    flex-shrink: 0;
+    position: relative;
+    padding-top: 0.15em;
+}
+.sortable-item-hover-bottom::after {
+    content: '';
+    height: 2px;
+    background-color:lightblue;
+    filter: drop-shadow(0 0 5px rgba(0, 0, 255, 0.5));
+    width:100%;
+    border-radius: 2px;
+    position: absolute;
+    bottom: -0.06em;
+    left: 0;
+    z-index: -1;
+}
+.sortable-item-hover-top::before {
+    content: '';
+    height: 2px;
+    background-color:lightblue;
+    filter: drop-shadow(0 0 5px rgba(0, 0, 255, 0.5));
+    width:100%;
+    border-radius: 2px;
+    position: absolute;
+    top: -0.06em;
+    z-index: -1;
+}
+.visual-item {
+    background-color: #e6b815;
+    border: 2px solid #bd970f;
+    padding: 0.25em;
+    border-radius: 0.25em;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap:0.25em;
+    box-sizing: border-box;
+    min-height: 38px;
+
+    flex-shrink: 0;
+}
+.slot input {
+    field-sizing: content;
+    min-width: 2.2em;
+    text-align: center;
+    outline: none;
+    background-color: white;
+    border: 2px solid #d6d6d6;
+    padding:0.2em;
+    padding-left:0.6em;
+    padding-right:0.6em;
+    
+    border-radius:1em;
+    
+    font-size: 14px;
+    font-family: 'Roboto';
+    
+    box-sizing: border-box;
+    height: 27px;
+
+    flex-shrink: 0;
+}
+.sortable-item select, .draggable-slot select {
+    field-sizing: content;
+    min-width: 2.2em;
+    text-align: center;
+    outline: none;
+    background-color: inherit;
+    border: inherit;
+    padding:0.2em;
+    margin-left:0.2em;
+    margin-right:0.2em;
+    
+    border-radius:0.4em;
+    
+    font-size: 14px;
+    font-family: 'Roboto';
+    
+    box-sizing: border-box;
+    height: 27px;
+    
+    color: white;
+
+    flex-shrink: 0;
+}
+.drag-icon {
+    font-size: 1.2em;
+    cursor: grab;
+}
+.dragging > .visual-item {
+    opacity: 0.5;
+}
+.item-text {
+    flex-shrink: 0;
+    cursor: default;
+}
+
+#draggable-slots {
+    /*display: flex;
+    gap: 0.2em;*/
+    
+}
+#blocks-list > .draggable-slot {
+    cursor: grab;
+}
+.label > .draggable-slot {
+    cursor: grab;
+}
+.draggable-slot {
+    background-color: #645de8;
+    border: 2px solid #403ab0;
+    color: white;
+    padding:0.1em;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3em;
+    width: fit-content;
+    
+    cursor: default;
+    
+    font-size: 14px;
+    
+    border-radius:2.25em;
+    
+    box-sizing: border-box;
+    min-height: 27px;
+    
+    flex-shrink: 0;
+    flex-grow: 0;
+    word-break: none;
+    position: relative;
+    z-index: 1;
+}
+.draggable-slot:has(> select) {
+    padding-top:0.2em;
+    padding-bottom:0.2em;
+}
+.draggable-slot:has(> button) {
+    padding-right:0.2em;
+}
+.draggable-slot button {
+    background-color: inherit;
+    border: none;
+    color: white;
+    
+    font-size: 1.4em;
+    
+    border-radius:1em;
+    
+    box-sizing: border-box;
+    height: 20px;
+    width: 20px;
+    
+    flex-shrink: 0;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.draggable-slot:has(> button:hover) {
+    border-style: dashed;
+    opacity: 0.5;
+}
+.new-option {
+    background-color: darkgrey;
+    border: 2px solid grey;
+    color: white;
+    padding:0.2em;
+    padding-left:0.6em;
+    padding-right:0.6em;
+    
+    font-size: 14px;
+    
+    border-radius:1em;
+    
+    cursor: pointer;
+    
+    box-sizing: border-box;
+    height: 27px;
+    width: 27px;
+    
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    font-size: 1.2em;
+    
+    transition: transform 0.2s;
+}
+.new-option:hover {
+    transform: rotate(180deg);
+}
+.slot {
+    pointer-events: none;
+}
+.slot input, .slot .draggable-slot {
+    pointer-events: auto;
+}
+.slot:has(> .draggable-slot) > input {
+    display: none;
+}
+.slot:has(> .hidden) input {
+    display: block;
+}
+
+.dragging-over > input {
+    border: 2px solid #fff27a;
+}
+.dragging-over > div {
+    border: 2px solid #fff27a;
+}
+
+.catagory-jump {
+    background-color: #69d1a4;
+    border: 2px solid #53ad86;
+}
+.catagory-slot {
+    background-color: #645de8;
+    border: 2px solid #403ab0;
+}
+.catagory-label {
+    background-color: #4a6e94;
+    border: 2px solid #3b5a7a;
+}
+.catagory-green {
+    background-color: #00ff00;
+    border: 2px solid #00dd00;
+}
+
+.catagory-transform {
+    background: #07aced;
+    border: solid 2px #0b85b5;
+}
+.catagory-math {
+    background: #30db52;
+    border: solid 2px #20b33d;
+}
+.catagory-math.draggable-slot {
+    padding:0.2em;
+}
