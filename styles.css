@@ -337,6 +337,13 @@ body {
 .draggable-slot:has(> button) {
     padding-right:0.2em;
 }
+.draggable-slot:has(:first-child:is(.slot)) {
+    padding-left: 0.2em;
+}
+.draggable-slot:has(:last-child:is(.slot)) {
+    padding-right: 0.2em;
+}
+
 .draggable-slot button {
     background-color: inherit;
     border: none;
@@ -433,7 +440,4 @@ body {
 .catagory-math {
     background: #30db52;
     border: solid 2px #20b33d;
-}
-.catagory-math.draggable-slot {
-    padding:0.2em;
 }
