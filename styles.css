@@ -190,6 +190,7 @@ body {
     position: relative;
     padding-top: 0.15em;
     padding-bottom: 0.15em;
+    cursor: default;
 }
 .sortable-item + .sortable-item {
     flex-grow: 0;
@@ -287,7 +288,7 @@ body {
 }
 .item-text {
     flex-shrink: 0;
-    cursor: default;
+    cursor: inherit;
 }
 
 #draggable-slots {
